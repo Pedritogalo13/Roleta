@@ -1,459 +1,395 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Combate RPG</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background: #111;
-            color: #eee;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        
-        .col {
-            flex: 1 1 300px;
-            min-width: 280px;
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-        
-        h2 {
-            margin-top: 0;
-        }
-        
-        label {
-            display: block;
-            margin: 8px 0;
-        }
-        
-        input, select, button {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        
-        input, select {
-            background: #222;
-            color: #fff;
-            border: 1px solid #555;
-        }
-        
-        button {
-            background: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        button:hover {
-            background: #555;
-        }
-        
-        .resultado {
-            margin-top: 20px;
-            background: #222;
-            padding: 15px;
-            border-radius: 8px;
-            word-wrap: break-word;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .status-bar {
-            height: 20px;
-            background: #333;
-            border-radius: 5px;
-            margin: 5px 0;
-            overflow: hidden;
-        }
-        
-        .hp-bar {
-            height: 100%;
-            background: #5cb85c;
-            border-radius: 5px;
-            transition: width 0.3s;
-        }
-        
-        .hp-text {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="col">
-        <h2>Personagem 1</h2>
-        <input type="text" id="nome1" value="Guerreiro">
-        
-        <label>Altura:
-            <select id="altura1">
-                <option value="100">100 cm (1,0m)</option>
-                <option value="110">110 cm (1,1m)</option>
-                <option value="120">120 cm (1,2m)</option>
-                <option value="130">130 cm (1,3m)</option>
-                <option value="140">140 cm (1,4m)</option>
-                <option value="150">150 cm (1,5m)</option>
-                <option value="160">160 cm (1,6m)</option>
-                <option value="170" selected>170 cm (1,7m)</option>
-                <option value="180">180 cm (1,8m)</option>
-                <option value="190">190 cm (1,9m)</option>
-                <option value="200">200 cm (2,0m)</option>
-                <option value="210">210 cm (2,1m)</option>
-                <option value="220">220 cm (2,2m)</option>
-                <option value="230">230 cm (2,3m)</option>
-                <option value="240">240 cm (2,4m)</option>
-                <option value="250">250 cm (2,5m)</option>
-                <option value="260">260 cm (2,6m)</option>
-                <option value="270">270 cm (2,7m)</option>
-                <option value="280">280 cm (2,8m)</option>
-                <option value="290">290 cm (2,9m)</option>
-                <option value="300">300 cm (3,0m)</option>
-            </select>
-        </label>
-        
-        <label>Tipo:
-            <select id="tipo1">
-                <option value="comum">Comum</option>
-                <option value="medio">Médio</option>
-                <option value="forte">Forte</option>
-                <option value="general">General</option>
-            </select>
-        </label>
-        
-        <label>Gênero:
-            <select id="genero1">
-                <option value="masc">Masculino</option>
-                <option value="fem">Feminino</option>
-            </select>
-        </label>
-        
-        <label>Arma:
-            <select id="arma1">
-                <option>Espada longa</option><option>Espada curta</option><option>Machado</option><option>Machado de guerra</option>
-                <option>Lança</option><option>Alabarda</option><option>Maça</option><option>Mangual</option>
-                <option>Arco</option><option>Besta</option><option>Adaga</option><option>Foice</option>
-                <option>Martelo de guerra</option><option>Espada bastarda</option><option>Espada larga</option><option>Tridente</option>
-                <option>Clava</option><option>Sabre</option><option>Falcione</option><option>Katana</option>
-                <option>Punhos</option><option>Chute</option>
-            </select>
-        </label>
-        
-        <label>Material arma:
-            <select id="materialArma1">
-                <option>Madeira</option><option>Bronze</option><option>Ferro</option><option>Aço</option>
-                <option>Obsidiana</option><option>Mithril</option><option>Valiriano</option>
-            </select>
-        </label>
-        
-        <label>Armadura:
-            <select id="armadura1">
-                <option>Sem armadura</option><option>Couro</option><option>Malha leve</option><option>Malha pesada</option>
-                <option>Placas leves</option><option>Placas pesadas</option><option>Escudo</option>
-            </select>
-        </label>
-        
-        <label>Material armadura:
-            <select id="materialArm1">
-                <option>Madeira</option><option>Bronze</option><option>Ferro</option><option>Aço</option>
-                <option>Obsidiana</option><option>Mithril</option><option>Valiriano</option>
-            </select>
-        </label>
-        
-        <div class="hp-text" id="status1">HP: 100/100</div>
-        <div class="status-bar">
-            <div id="hp-bar1" class="hp-bar" style="width: 100%"></div>
-        </div>
-    </div>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
 
-    <div class="col">
-        <h2>Personagem 2</h2>
-        <input type="text" id="nome2" value="Inimigo">
-        
-        <label>Altura:
-            <select id="altura2">
-                <option value="100">100 cm (1,0m)</option>
-                <option value="110">110 cm (1,1m)</option>
-                <option value="120">120 cm (1,2m)</option>
-                <option value="130">130 cm (1,3m)</option>
-                <option value="140">140 cm (1,4m)</option>
-                <option value="150">150 cm (1,5m)</option>
-                <option value="160">160 cm (1,6m)</option>
-                <option value="170">170 cm (1,7m)</option>
-                <option value="180" selected>180 cm (1,8m)</option>
-                <option value="190">190 cm (1,9m)</option>
-                <option value="200">200 cm (2,0m)</option>
-                <option value="210">210 cm (2,1m)</option>
-                <option value="220">220 cm (2,2m)</option>
-                <option value="230">230 cm (2,3m)</option>
-                <option value="240">240 cm (2,4m)</option>
-                <option value="250">250 cm (2,5m)</option>
-                <option value="260">260 cm (2,6m)</option>
-                <option value="270">270 cm (2,7m)</option>
-                <option value="280">280 cm (2,8m)</option>
-                <option value="290">290 cm (2,9m)</option>
-                <option value="300">300 cm (3,0m)</option>
-            </select>
-        </label>
-        
-        <label>Tipo:
-            <select id="tipo2">
-                <option value="comum">Comum</option>
-                <option value="medio">Médio</option>
-                <option value="forte">Forte</option>
-                <option value="general">General</option>
-            </select>
-        </label>
-        
-        <label>Gênero:
-            <select id="genero2">
-                <option value="masc">Masculino</option>
-                <option value="fem">Feminino</option>
-            </select>
-        </label>
-        
-        <label>Arma:
-            <select id="arma2">
-                <option>Espada longa</option><option>Espada curta</option><option>Machado</option><option>Machado de guerra</option>
-                <option>Lança</option><option>Alabarda</option><option>Maça</option><option>Mangual</option>
-                <option>Arco</option><option>Besta</option><option>Adaga</option><option>Foice</option>
-                <option>Martelo de guerra</option><option>Espada bastarda</option><option>Espada larga</option><option>Tridente</option>
-                <option>Clava</option><option>Sabre</option><option>Falcione</option><option>Katana</option>
-                <option>Punhos</option><option>Chute</option>
-            </select>
-        </label>
-        
-        <label>Material arma:
-            <select id="materialArma2">
-                <option>Madeira</option><option>Bronze</option><option>Ferro</option><option>Aço</option>
-                <option>Obsidiana</option><option>Mithril</option><option>Valiriano</option>
-            </select>
-        </label>
-        
-        <label>Armadura:
-            <select id="armadura2">
-                <option>Sem armadura</option><option>Couro</option><option>Malha leve</option><option>Malha pesada</option>
-                <option>Placas leves</option><option>Placas pesadas</option><option>Escudo</option>
-            </select>
-        </label>
-        
-        <label>Material armadura:
-            <select id="materialArm2">
-                <option>Madeira</option><option>Bronze</option><option>Ferro</option><option>Aço</option>
-                <option>Obsidiana</option><option>Mithril</option><option>Valiriano</option>
-            </select>
-        </label>
-        
-        <div class="hp-text" id="status2">HP: 100/100</div>
-        <div class="status-bar">
-            <div id="hp-bar2" class="hp-bar" style="width: 100%"></div>
-        </div>
-    </div>
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Zyk Kesir RPG</title>  
+<style>  
+  body {  
+    margin: 0;  
+    font-family: 'Poppins', sans-serif;  
+    background-color: #0a0a0a;  
+    color: white;  
+  }  
+  header {
+    background: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
 
-    <div class="col">
-        <h2>Condições</h2>
-        
-        <label>Campo:
-            <select id="campo">
-                <option value="seco">Seco</option><option value="molhado">Molhado</option><option value="lama">Lama</option>
-                <option value="neve">Neve</option><option value="noite">Noite</option><option value="vento">Vento</option>
-            </select>
-        </label>
-        
-        <label>Relevo:
-            <select id="relevo">
-                <option value="plano">Plano</option><option value="colina">Colina</option><option value="montanha">Montanha</option>
-                <option value="vale">Vale</option>
-            </select>
-        </label>
-        
-        <label>Atacante:
-            <select id="atacante">
-                <option value="1">P1</option><option value="2">P2</option>
-            </select>
-        </label>
-        
-        <label>Parte do corpo:
-            <select id="parte">
-                <option value="cabeca">Cabeça</option><option value="torso">Torso</option><option value="braco">Braço</option><option value="perna">Perna</option>
-            </select>
-        </label>
-        
-        <button onclick="duelo()">Atacar!</button>
-        <button onclick="resetar()">Resetar</button>
-        
-        <div id="saida" class="resultado">Resultado: —</div>
-    </div>
+  .logo { font-size:1.5em; color:red; font-weight:bold; }
 
-    <script>
-        let personagens = {
-            1: {hp:100, nome:"Guerreiro", arma:"Espada longa", armaMat:"Ferro", armadura:"Sem armadura", armMat:"Couro"},
-            2: {hp:100, nome:"Inimigo", arma:"Espada longa", armaMat:"Ferro", armadura:"Sem armadura", armMat:"Couro"}
-        };
+  nav { display:flex; gap:15px; }
 
-        function atualizar(){
-            [1,2].forEach(i=>{
-                personagens[i].nome = document.getElementById("nome"+i).value || personagens[i].nome;
-                personagens[i].altura = parseInt(document.getElementById("altura"+i).value);
-                personagens[i].tipo = document.getElementById("tipo"+i).value;
-                personagens[i].arma = document.getElementById("arma"+i).value;
-                personagens[i].armaMat = document.getElementById("materialArma"+i).value;
-                personagens[i].armadura = document.getElementById("armadura"+i).value;
-                personagens[i].armMat = document.getElementById("materialArm"+i).value;
-                personagens[i].genero = document.getElementById("genero"+i).value;
-                
-                // Atualizar barra de HP
-                document.getElementById(`hp-bar${i}`).style.width = `${personagens[i].hp}%`;
-                document.getElementById(`status${i}`).textContent = `HP: ${personagens[i].hp}/100`;
-            });
+  nav a { color:white; text-decoration:none; padding:6px 10px; border-radius:6px; transition:0.3s; }
+
+  nav a:hover { background:red; }
+
+  .menu-toggle { display:none; font-size:1.5em; cursor:pointer; }
+
+  #content { padding:20px; }
+
+  .topic { background:#1a1a1a; margin:15px 0; border-radius:10px; padding:10px; cursor:pointer; transition:0.3s; }
+
+  .topic:hover { background:#222; }
+
+  .topic img { width:100%; border-radius:10px; }
+
+  .topic-title { color:red; font-weight:bold; margin-top:8px; }
+
+  #addBtn { position:fixed; bottom:20px; right:20px; background:red; color:white; font-size:1.5em; border:none; border-radius:50%; width:50px; height:50px; cursor:pointer; transition:0.3s; }
+
+  #addBtn:hover { background:#b30000; }
+
+  #modal, #deleteModal, #loginScreen { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:10; }
+
+  #modal-content, #deleteModal-content, #login-content { background:#111; padding:20px; border-radius:10px; width:90%; max-width:400px; box-shadow:0 0 15px rgba(255,0,0,0.3); }
+
+  #modal-content input, #modal-content textarea, #deletePassword, #login-content input { width:100%; margin-bottom:10px; padding:8px; border:none; border-radius:6px; background:#222; color:white; }
+
+  #modal-content button, #deleteModal-content button, #login-content button { background:red; border:none; padding:10px; border-radius:6px; color:white; width:100%; cursor:pointer; transition:0.3s; }
+
+  #modal-content button:hover, #deleteModal-content button:hover, #login-content button:hover { background:#b30000; }
+
+  #deleteModal-buttons { display:flex; justify-content:space-between; gap:10px; }
+
+  #cancelDelete { background:#333; }
+
+  #cancelDelete:hover { background:#444; }
+
+  #detailView { display:none; padding:20px; }
+
+  .btn { display:inline-block; padding:10px 18px; border-radius:8px; border:1px solid red; background:transparent; color:red; font-weight:500; cursor:pointer; transition:0.3s; }
+
+  .btn:hover { background:red; color:white; }
+
+  #backBtn { margin-bottom:20px; }
+
+  #deleteBtn, #editBtn { display:block; margin:20px auto 0; }
+
+  .detail-text { white-space:pre-line; line-height:1.5; }
+
+  @media(max-width: 768px) { 
+    nav{ display:none; flex-direction:column; background:#111; position:absolute; top:60px; right:0; width:200px; } 
+    nav.active{ display:flex; } 
+    .menu-toggle{ display:block; } 
+  } 
+</style>
+
+</head>  
+<body>  
+  <!-- LOGIN -->  
+  <div id="loginScreen">  
+    <div id="login-content">  
+      <h2 style="color:red; text-align:center;">Zyk Kesir RPG</h2>  
+      <input type="text" id="username" placeholder="Usuário">  
+      <input type="password" id="password" placeholder="Senha">  
+      <button id="loginBtn">Entrar</button>  
+      <p style="text-align:center; font-size:0.9em; color:#aaa;">Player: 123</p>  
+    </div>  
+  </div>  
+
+  <header>  
+    <div class="logo">Zyk Kesir RPG</div>  
+    <div class="menu-toggle" id="menuToggle">☰</div>  
+    <nav id="menu">  
+      <a href="#" data-tab="ranking">Ranking</a>  
+      <a href="#" data-tab="batalhas">Batalhas</a>  
+      <a href="#" data-tab="armas">Armas</a>  
+      <a href="#" data-tab="dragoes">Dragões</a>  
+      <a href="#" data-tab="casas">Casas</a>  
+      <a href="#" data-tab="personagens">Personagens</a>  
+      <a href="#" data-tab="animais">Animais</a>  
+      <a href="#" data-tab="torneios">Torneios</a>  
+      <a href="#" data-tab="regioes">Regiões</a>  
+    </nav>  
+  </header>  
+
+  <main id="content"></main>  
+
+  <div id="detailView">  
+    <button class="btn" id="backBtn">Voltar</button>  
+    <div id="detailContent"></div>  
+  </div>  
+
+  <button id="addBtn">+</button>
+
+  <div id="modal">  
+    <div id="modal-content">  
+      <input type="file" id="imageInput" accept="image/*">  
+      <input type="text" id="titleInput" placeholder="Título (vermelho)">  
+      <textarea id="textInput" placeholder="Digite o texto..."></textarea>  
+      <button id="saveBtn">Enviar</button>  
+    </div>  
+  </div>  
+
+  <div id="deleteModal">  
+    <div id="deleteModal-content">  
+      <h3 style="color:red; text-align:center;">Confirmar exclusão</h3>  
+      <p style="text-align:center;">Digite a senha para apagar:</p>  
+      <input type="password" id="deletePassword" placeholder="Senha">  
+      <div id="deleteModal-buttons">  
+        <button id="cancelDelete">Cancelar</button>  
+        <button id="confirmDelete">Apagar</button>  
+      </div>  
+    </div>  
+  </div>  
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://zoztapepviyezjoagawe.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvenRhcGVwdml5ZXpqb2FnYXdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNDY1NzQsImV4cCI6MjA3NzkyMjU3NH0.2L0CN2WhXvH1K1y-xCi3y8prQOTkQP_suE4gFFKlzP0';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const loginScreen = document.getElementById('loginScreen');  
+    const loginBtn = document.getElementById('loginBtn');  
+    const username = document.getElementById('username');  
+    const password = document.getElementById('password');  
+    const addBtn = document.getElementById('addBtn');  
+    const saveBtn = document.getElementById('saveBtn');  
+    const confirmDelete = document.getElementById('confirmDelete');  
+
+    let currentTab = 'ranking';
+    let deleteIndex = null;
+    let editIndex = null;
+    let currentRole = null; // "adm" ou "player"
+    let currentData = [];
+
+    // LOGIN
+    loginScreen.style.display = 'flex';
+    loginBtn.addEventListener('click', () => {
+      const user = username.value.trim();
+      const pass = password.value.trim();
+      if ((user.toLowerCase() === 'adm' && pass === 'P3drov3g3ta') || (user.toLowerCase() === 'player' && pass === '123')) {
+        currentRole = user.toLowerCase();
+        loginScreen.style.display = 'none';
+        renderTab();
+        if (currentRole === 'player') addBtn.style.display = 'none';
+      } else {
+        alert('Usuário ou senha incorretos!');
+      }
+    });
+
+    // RESTO DO SITE
+    const menu = document.getElementById('menu');
+    const menuToggle = document.getElementById('menuToggle');
+    const content = document.getElementById('content');
+    const modal = document.getElementById('modal');
+    const deleteModal = document.getElementById('deleteModal');
+    const detailView = document.getElementById('detailView');
+    const detailContent = document.getElementById('detailContent');
+    const backBtn = document.getElementById('backBtn');
+    const cancelDelete = document.getElementById('cancelDelete');
+    const deletePassword = document.getElementById('deletePassword');
+    const imageInput = document.getElementById('imageInput');
+    const titleInput = document.getElementById('titleInput');
+    const textInput = document.getElementById('textInput');
+
+    async function renderTab() {
+      content.innerHTML = '<p style="text-align:center;">Carregando...</p>';
+      detailView.style.display = 'none';
+      content.style.display = 'block';
+
+      try {
+        // Buscar dados do Supabase
+        const { data: items, error } = await supabase
+          .from(currentTab)
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        currentData = items || [];
+        content.innerHTML = '';
+
+        if (currentData.length === 0) {
+          content.innerHTML = '<p style="text-align:center;">Nenhum item encontrado.</p>';
+          return;
         }
 
-        function forcaArma(arma, mat){
-            let base = 10;
-            if(arma.includes("Espada")) base=15;
-            if(arma.includes("Machado")) base=18;
-            if(arma.includes("Maça")||arma.includes("Martelo")) base=20;
-            if(arma.includes("Lança")||arma.includes("Alabarda")||arma.includes("Tridente")) base=17;
-            if(arma==="Punhos") base=5;
-            if(arma==="Chute") base=6;
+        currentData.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'topic';
+          div.innerHTML = `  
+            ${item.image ? <img src="${item.image}"> : ''}  
+            <div class="topic-title">${item.title}</div>  
+          `;
+          div.addEventListener('click', () => openDetail(item, index));
+          content.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        content.innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar dados.</p>';
+      }
+    }
 
-            if(mat==="Ferro") base+=2;
-            if(mat==="Aço") base+=4;
-            if(mat==="Obsidiana") base+=6;
-            if(mat==="Mithril") base+=8;
-            if(mat==="Valiriano") base+=15;
+    function openDetail(item, index) {
+      content.style.display = 'none';
+      detailView.style.display = 'block';
+      detailContent.innerHTML = `  
+        ${item.image ? <img src="${item.image}" style="width:100%;border-radius:10px;"> : ''}  
+        <h2 style="color:red;">${item.title}</h2>  
+        <p class="detail-text">${item.text}</p>  
+        ${currentRole === 'adm' ? `
+          <button class="btn" id="editBtn">Editar</button>
+          <button class="btn" id="deleteBtn">Apagar</button>
+        ` : ''}  
+      `;
 
-            return base;
+      if (currentRole === 'adm') {
+        document.getElementById('deleteBtn').addEventListener('click', () => {
+          deleteIndex = index;
+          deletePassword.value = '';
+          deleteModal.style.display = 'flex';
+        });
+
+        document.getElementById('editBtn').addEventListener('click', () => {
+          editIndex = index;
+          const itemToEdit = currentData[index];
+          titleInput.value = itemToEdit.title;
+          textInput.value = itemToEdit.text;
+          modal.style.display = 'flex';
+        });
+      }
+    }
+
+    confirmDelete.addEventListener('click', async () => {
+      if (deletePassword.value === 'Galo') {
+        try {
+          const itemToDelete = currentData[deleteIndex];
+          
+          const { error } = await supabase
+            .from(currentTab)
+            .delete()
+            .eq('id', itemToDelete.id);
+
+          if (error) throw error;
+
+          deleteModal.style.display = 'none';
+          renderTab();
+          detailView.style.display = 'none';
+          content.style.display = 'block';
+        } catch (error) {
+          console.error('Erro ao deletar:', error);
+          alert('Erro ao deletar item.');
         }
+      } else {
+        alert('Senha incorreta!');
+      }
+    });
 
-        function defesaArmadura(arm, mat){
-            let def=0;
-            if(arm.includes("Couro")) def=5;
-            if(arm.includes("Malha")) def=10;
-            if(arm.includes("Placas")) def=15;
-            if(arm.includes("Escudo")) def+=8;
+    cancelDelete.addEventListener('click', () => {
+      deleteModal.style.display = 'none';
+    });
 
-            if(mat==="Bronze") def+=1;
-            if(mat==="Ferro") def+=3;
-            if(mat==="Aço") def+=5;
-            if(mat==="Mithril") def+=8;
-            if(mat==="Valiriano") def+=15;
+    backBtn.addEventListener('click', () => {
+      detailView.style.display = 'none';
+      content.style.display = 'block';
+    });
 
-            return def;
-        }
+    menuToggle.addEventListener('click', () => {
+      menu.classList.toggle('active');
+    });
 
-        function chanceQuebra(mat){
-            if(mat==="Madeira") return 0.2;
-            if(mat==="Bronze") return 0.15;
-            if(mat==="Ferro") return 0.1;
-            if(mat==="Aço") return 0.05;
-            if(mat==="Obsidiana") return 0.25;
-            if(mat==="Mithril") return 0.01;
-            if(mat==="Valiriano") return 0.001;
-            return 0.1;
-        }
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        currentTab = link.dataset.tab;
+        renderTab();
+        menu.classList.remove('active');
+      });
+    });
 
-        function duelo(){
-            atualizar();
-            let atkId = document.getElementById("atacante").value;
-            let defId = (atkId === "1") ? "2" : "1";
-            let atk = personagens[atkId], def = personagens[defId];
+    addBtn.addEventListener('click', () => {
+      editIndex = null;
+      modal.style.display = 'flex';
+      titleInput.value = '';
+      textInput.value = '';
+      imageInput.value = '';
+    });
 
-            if(atk.hp <= 0 || def.hp <= 0){
-                document.getElementById("saida").innerHTML = "⚔ O combate acabou!";
-                return;
-            }
+    saveBtn.addEventListener('click', async () => {
+      const text = textInput.value;
+      const title = titleInput.value;
 
-            let probHit = 60;
-            if(atk.tipo === "forte") probHit += 10;
-            if(atk.tipo === "comum") probHit -= 10;
-            if(atk.tipo === "general") probHit += 15;
+      if (!title || !text) {
+        alert('Preencha título e texto!');
+        return;
+      }
 
-            let diff = atk.altura - def.altura;
-            if(diff > 20) probHit += 5;
-            if(diff < -20) probHit -= 10;
+      try {
+        if (imageInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = async e => {
+            const newItem = { 
+              image: e.target.result, 
+              title, 
+              text 
+            };
 
-            let r = Math.random();
-            let resultado = '';
+            if (editIndex !== null) {
+              // Atualizar item existente
+              const itemToUpdate = currentData[editIndex];
+              const { error } = await supabase
+                .from(currentTab)
+                .update(newItem)
+                .eq('id', itemToUpdate.id);
 
-            if(r < 0.1) {
-                resultado = `${def.nome} BLOQUEOU o ataque! 🛡`;
-            } else if(r < 0.2) {
-                resultado = `${def.nome} DESVIOU do golpe! 💨`;
-            } else if(Math.random() * 100 > probHit) {
-                resultado = `${atk.nome} errou o ataque contra ${def.nome}.`;
+              if (error) throw error;
             } else {
-                let dano = Math.max(0, forcaArma(atk.arma, atk.armaMat) - defesaArmadura(def.armadura, def.armMat) + Math.floor(Math.random() * 5));
-                def.hp -= dano;
-                if(def.hp < 0) def.hp = 0;
+              // Criar novo item
+              const { error } = await supabase
+                .from(currentTab)
+                .insert([newItem]);
 
-                if(Math.random() < chanceQuebra(atk.armaMat)){
-                    atk.arma = "Quebrada"; 
-                    atk.armaMat = "Madeira";
-                    resultado = `${atk.nome} acertou ${def.nome} (-${dano} HP), mas a arma QUEBROU! ⚡`;
-                } else {
-                    resultado = `${atk.nome} acertou ${def.nome} com ${atk.arma} de ${atk.armaMat} (-${dano} HP).`;
-                }
-
-                if(def.hp <= 0) {
-                    resultado += `<br>💀 ${def.nome} caiu morto!`;
-                }
+              if (error) throw error;
             }
 
-            // Atualizar barras de HP
-            document.getElementById(`hp-bar${defId}`).style.width = `${def.hp}%`;
-            document.getElementById(`status${defId}`).textContent = `HP: ${def.hp}/100`;
-            
-            resultado += `<hr><b>Status:</b><br>${personagens[1].nome}: ${personagens[1].hp} HP (${personagens[1].arma})<br>${personagens[2].nome}: ${personagens[2].hp} HP (${personagens[2].arma})`;
-            document.getElementById("saida").innerHTML = resultado;
-        }
+            modal.style.display = 'none';
+            renderTab();
+          };
+          reader.readAsDataURL(imageInput.files[0]);
+        } else {
+          const newItem = {
+            image: editIndex !== null ? currentData[editIndex].image : null,
+            title, 
+            text
+          };
 
-        function resetar(){
-            personagens[1] = {hp:100, nome:"Guerreiro", arma:"Espada longa", armaMat:"Ferro", armadura:"Sem armadura", armMat:"Couro"};
-            personagens[2] = {hp:100, nome:"Inimigo", arma:"Espada longa", armaMat:"Ferro", armadura:"Sem armadura", armMat:"Couro"};
-            
-            // Resetar seleções
-            document.getElementById("nome1").value = "Guerreiro";
-            document.getElementById("altura1").value = "170";
-            document.getElementById("tipo1").value = "comum";
-            document.getElementById("genero1").value = "masc";
-            document.getElementById("arma1").value = "Espada longa";
-            document.getElementById("materialArma1").value = "Ferro";
-            document.getElementById("armadura1").value = "Sem armadura";
-            document.getElementById("materialArm1").value = "Couro";
-            
-            document.getElementById("nome2").value = "Inimigo";
-            document.getElementById("altura2").value = "180";
-            document.getElementById("tipo2").value = "comum";
-            document.getElementById("genero2").value = "masc";
-            document.getElementById("arma2").value = "Espada longa";
-            document.getElementById("materialArma2").value = "Ferro";
-            document.getElementById("armadura2").value = "Sem armadura";
-            document.getElementById("materialArm2").value = "Couro";
-            
-            // Atualizar barras de HP
-            document.getElementById("hp-bar1").style.width = "100%";
-            document.getElementById("hp-bar2").style.width = "100%";
-            document.getElementById("status1").textContent = "HP: 100/100";
-            document.getElementById("status2").textContent = "HP: 100/100";
-            
-            document.getElementById("saida").innerHTML = "Resultado: —";
-        }
+          if (editIndex !== null) {
+            // Atualizar item existente
+            const itemToUpdate = currentData[editIndex];
+            const { error } = await supabase
+              .from(currentTab)
+              .update(newItem)
+              .eq('id', itemToUpdate.id);
 
-        // Inicializar
-        atualizar();
-    </script>
+            if (error) throw error;
+          } else {
+            // Criar novo item
+            const { error } = await supabase
+              .from(currentTab)
+              .insert([newItem]);
+
+            if (error) throw error;
+          }
+
+          modal.style.display = 'none';
+          renderTab();
+        }
+      } catch (error) {
+        console.error('Erro ao salvar:', error);
+        alert('Erro ao salvar item.');
+      }
+    });
+
+    window.onclick = e => {
+      if (e.target === modal) modal.style.display = 'none';
+      if (e.target === deleteModal) deleteModal.style.display = 'none';
+    };
+  </script>  
 </body>
 </html>
