@@ -129,7 +129,9 @@
 
   .topic:hover img {
     transform: scale(1.05);
-  } 
+  }
+
+  .topic-title {
     color: red; 
     font-weight: bold; 
     margin-top: 10px;
@@ -143,22 +145,32 @@
     position: fixed; 
     bottom: 20px; 
     right: 20px; 
-    background: red; 
-    color: white; 
-    font-size: 1.5em; 
+    background: #e63946; 
+    color: #ffffff; 
+    font-size: 2.5em; 
     border: none; 
     border-radius: 50%; 
-    width: 50px; 
-    height: 50px; 
+    width: 60px; 
+    height: 60px; 
     cursor: pointer; 
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(255,0,0,0.4);
-    z-index: 99;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-weight: 300;
+    line-height: 1;
   }
 
   #addBtn:hover { 
-    background: #b30000;
+    background: #d62839;
     transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+  }
+
+  #addBtn:active {
+    transform: scale(0.95);
   }
 
   .modal-overlay { 
@@ -522,7 +534,7 @@
         elements.loginScreen.classList.remove('show');
         
         if (state.currentRole === 'adm') {
-          elements.addBtn.style.display = 'block';
+          elements.addBtn.style.display = 'flex';
         }
         
         renderTab();
