@@ -91,9 +91,21 @@
 
   .topics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
     margin-top: 20px;
+  }
+
+  @media(min-width: 1200px) {
+    .topics-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media(min-width: 900px) and (max-width: 1199px) {
+    .topics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   .topic { 
@@ -110,33 +122,14 @@
     box-shadow: 0 5px 20px rgba(255,0,0,0.3);
   }
 
-  .topic-image-container {
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   .topic img { 
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-    transition: transform 0.3s;
+    width: 100%;
+    border-radius: 10px;
   }
 
   .topic:hover img {
     transform: scale(1.05);
-  }
-
-  .topic-title { 
+  } 
     color: red; 
     font-weight: bold; 
     margin-top: 10px;
@@ -332,8 +325,16 @@
       grid-template-columns: 1fr;
     }
 
+    .topic-image-container {
+      height: 300px;
+    }
+
     .modal-content {
       max-width: 100%;
+    }
+
+    #content {
+      padding: 15px;
     }
   } 
 </style>
@@ -588,7 +589,7 @@
           div.className = 'topic';
           
           const imageHtml = item.image 
-            ? `<div class="topic-image-container"><img src="${item.image}" alt="${item.title}" loading="lazy"></div>`
+            ? `<img src="${item.image}" alt="${item.title}" loading="lazy">`
             : '';
           
           div.innerHTML = `${imageHtml}<div class="topic-title">${item.title}</div>`;
