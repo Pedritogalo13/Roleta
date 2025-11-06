@@ -4,99 +4,372 @@
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Zyk Kesir RPG</title>  
+<title>Zyk Kesir RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <style>  
+  * {
+    box-sizing: border-box;
+  }
+
   body {  
     margin: 0;  
     font-family: 'Poppins', sans-serif;  
     background-color: #0a0a0a;  
-    color: white;  
+    color: white;
+    overflow-x: hidden;
   }  
+
   header {
     background: #111;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
 
-  .logo { font-size:1.5em; color:red; font-weight:bold; }
+  .logo { 
+    font-size: 1.5em; 
+    color: red; 
+    font-weight: bold;
+    user-select: none;
+  }
 
-  nav { display:flex; gap:15px; }
+  nav { 
+    display: flex; 
+    gap: 15px;
+  }
 
-  nav a { color:white; text-decoration:none; padding:6px 10px; border-radius:6px; transition:0.3s; }
+  nav a { 
+    color: white; 
+    text-decoration: none; 
+    padding: 6px 10px; 
+    border-radius: 6px; 
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
 
-  nav a:hover { background:red; }
+  nav a:hover, nav a.active { 
+    background: red;
+  }
 
-  .menu-toggle { display:none; font-size:1.5em; cursor:pointer; }
+  .menu-toggle { 
+    display: none; 
+    font-size: 1.5em; 
+    cursor: pointer;
+    user-select: none;
+  }
 
-  #content { padding:20px; }
+  #content { 
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-  .topic { background:#1a1a1a; margin:15px 0; border-radius:10px; padding:10px; cursor:pointer; transition:0.3s; }
+  .loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2em;
+    color: #888;
+  }
 
-  .topic:hover { background:#222; }
+  .loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
 
-  .topic img { width:100%; border-radius:10px; }
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
 
-  .topic-title { color:red; font-weight:bold; margin-top:8px; }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
 
-  #addBtn { position:fixed; bottom:20px; right:20px; background:red; color:white; font-size:1.5em; border:none; border-radius:50%; width:50px; height:50px; cursor:pointer; transition:0.3s; }
+  @media(min-width: 1200px) {
+    .topics-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 
-  #addBtn:hover { background:#b30000; }
+  @media(min-width: 900px) and (max-width: 1199px) {
+    .topics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 
-  #modal, #deleteModal, #loginScreen { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:10; }
+  .topic { 
+    background: #1a1a1a; 
+    border-radius: 10px; 
+    padding: 10px; 
+    cursor: pointer; 
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+  }
 
-  #modal-content, #deleteModal-content, #login-content { background:#111; padding:20px; border-radius:10px; width:90%; max-width:400px; box-shadow:0 0 15px rgba(255,0,0,0.3); }
+  .topic:hover { 
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(255,0,0,0.3);
+  }
 
-  #modal-content input, #modal-content textarea, #deletePassword, #login-content input { width:100%; margin-bottom:10px; padding:8px; border:none; border-radius:6px; background:#222; color:white; }
+  .topic img { 
+    width: 100%;
+    border-radius: 10px;
+  }
 
-  #modal-content button, #deleteModal-content button, #login-content button { background:red; border:none; padding:10px; border-radius:6px; color:white; width:100%; cursor:pointer; transition:0.3s; }
+  .topic:hover img {
+    transform: scale(1.05);
+  }
 
-  #modal-content button:hover, #deleteModal-content button:hover, #login-content button:hover { background:#b30000; }
+  .topic-title {
+    color: red; 
+    font-weight: bold; 
+    margin-top: 10px;
+    font-size: 1.1em;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+  }
 
-  #deleteModal-buttons { display:flex; justify-content:space-between; gap:10px; }
+  #addBtn { 
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    background: #e63946; 
+    color: #ffffff; 
+    font-size: 2.5em; 
+    border: none; 
+    border-radius: 50%; 
+    width: 60px; 
+    height: 60px; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-weight: 300;
+    line-height: 1;
+  }
 
-  #cancelDelete { background:#333; }
+  #addBtn:hover { 
+    background: #d62839;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+  }
 
-  #cancelDelete:hover { background:#444; }
+  #addBtn:active {
+    transform: scale(0.95);
+  }
 
-  #detailView { display:none; padding:20px; }
+  .modal-overlay { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000;
+    padding: 20px;
+  }
 
-  .btn { display:inline-block; padding:10px 18px; border-radius:8px; border:1px solid red; background:transparent; color:red; font-weight:500; cursor:pointer; transition:0.3s; }
+  .modal-overlay.show {
+    display: flex;
+  }
 
-  .btn:hover { background:red; color:white; }
+  .modal-content { 
+    background: #111; 
+    padding: 20px; 
+    border-radius: 10px; 
+    width: 100%; 
+    max-width: 400px; 
+    box-shadow: 0 0 30px rgba(255,0,0,0.5);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
 
-  #backBtn { margin-bottom:20px; }
+  .modal-content input, .modal-content textarea { 
+    width: 100%; 
+    margin-bottom: 10px; 
+    padding: 10px; 
+    border: none; 
+    border-radius: 6px; 
+    background: #222; 
+    color: white;
+    font-family: 'Poppins', sans-serif;
+  }
 
-  #deleteBtn, #editBtn { display:block; margin:20px auto 0; }
+  .modal-content textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
 
-  .detail-text { white-space:pre-line; line-height:1.5; }
+  .modal-content button { 
+    background: red; 
+    border: none; 
+    padding: 12px; 
+    border-radius: 6px; 
+    color: white; 
+    width: 100%; 
+    cursor: pointer; 
+    transition: background 0.3s;
+    font-size: 1em;
+    font-weight: 500;
+  }
+
+  .modal-content button:hover { 
+    background: #b30000;
+  }
+
+  .modal-buttons { 
+    display: flex; 
+    gap: 10px;
+  }
+
+  .btn-secondary { 
+    background: #333 !important;
+  }
+
+  .btn-secondary:hover { 
+    background: #444 !important;
+  }
+
+  #detailView { 
+    display: none; 
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .btn { 
+    display: inline-block; 
+    padding: 10px 18px; 
+    border-radius: 8px; 
+    border: 1px solid red; 
+    background: transparent; 
+    color: red; 
+    font-weight: 500; 
+    cursor: pointer; 
+    transition: all 0.3s;
+    text-align: center;
+  }
+
+  .btn:hover { 
+    background: red; 
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  #backBtn { 
+    margin-bottom: 20px;
+  }
+
+  .detail-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .detail-text { 
+    white-space: pre-line; 
+    line-height: 1.6;
+    font-size: 1.05em;
+  }
+
+  .detail-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    display: block;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .error-message {
+    text-align: center;
+    color: red;
+    padding: 40px;
+    font-size: 1.1em;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+    font-size: 1.1em;
+  }
 
   @media(max-width: 768px) { 
-    nav{ display:none; flex-direction:column; background:#111; position:absolute; top:60px; right:0; width:200px; } 
-    nav.active{ display:flex; } 
-    .menu-toggle{ display:block; } 
+    nav { 
+      display: none; 
+      flex-direction: column; 
+      background: #111; 
+      position: absolute; 
+      top: 100%; 
+      right: 0; 
+      width: 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      border-radius: 0 0 10px 10px;
+    } 
+
+    nav.active { 
+      display: flex;
+    } 
+
+    .menu-toggle { 
+      display: block;
+    }
+
+    .topics-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .topic-image-container {
+      height: 300px;
+    }
+
+    .modal-content {
+      max-width: 100%;
+    }
+
+    #content {
+      padding: 15px;
+    }
   } 
 </style>
-
 </head>  
+
 <body>  
-  <!-- LOGIN -->  
-  <div id="loginScreen">  
-    <div id="login-content">  
-      <h2 style="color:red; text-align:center;">Zyk Kesir RPG</h2>  
-      <input type="text" id="username" placeholder="Usuário">  
-      <input type="password" id="password" placeholder="Senha">  
+  <!-- LOGIN SCREEN -->  
+  <div id="loginScreen" class="modal-overlay show">  
+    <div class="modal-content">  
+      <h2 style="color:red; text-align:center; margin-top:0;">Zyk Kesir RPG</h2>  
+      <input type="text" id="username" placeholder="Usuário" autocomplete="username">  
+      <input type="password" id="password" placeholder="Senha" autocomplete="current-password">  
       <button id="loginBtn">Entrar</button>  
-      <p style="text-align:center; font-size:0.9em; color:#aaa;">Player: 123</p>  
+      <p style="text-align:center; font-size:0.9em; color:#aaa; margin-bottom:0;">Player: 123</p>  
     </div>  
   </div>  
 
+  <!-- HEADER -->
   <header>  
     <div class="logo">Zyk Kesir RPG</div>  
     <div class="menu-toggle" id="menuToggle">☰</div>  
     <nav id="menu">  
-      <a href="#" data-tab="ranking">Ranking</a>  
+      <a href="#" data-tab="ranking" class="active">Ranking</a>  
       <a href="#" data-tab="batalhas">Batalhas</a>  
       <a href="#" data-tab="armas">Armas</a>  
       <a href="#" data-tab="dragoes">Dragões</a>  
@@ -108,31 +381,40 @@
     </nav>  
   </header>  
 
+  <!-- CONTENT -->
   <main id="content"></main>  
 
+  <!-- DETAIL VIEW -->
   <div id="detailView">  
-    <button class="btn" id="backBtn">Voltar</button>  
+    <button class="btn" id="backBtn">← Voltar</button>  
     <div id="detailContent"></div>  
   </div>  
 
-  <button id="addBtn">+</button>
+  <!-- ADD BUTTON -->
+  <button id="addBtn" style="display:none;">+</button>
 
-  <div id="modal">  
-    <div id="modal-content">  
+  <!-- ADD/EDIT MODAL -->
+  <div id="modal" class="modal-overlay">  
+    <div class="modal-content">  
+      <h3 style="color:red; text-align:center; margin-top:0;">Adicionar/Editar</h3>
       <input type="file" id="imageInput" accept="image/*">  
-      <input type="text" id="titleInput" placeholder="Título (vermelho)">  
+      <input type="text" id="titleInput" placeholder="Título">  
       <textarea id="textInput" placeholder="Digite o texto..."></textarea>  
-      <button id="saveBtn">Enviar</button>  
+      <div class="modal-buttons">
+        <button id="cancelEdit" class="btn-secondary">Cancelar</button>
+        <button id="saveBtn">Salvar</button>  
+      </div>
     </div>  
   </div>  
 
-  <div id="deleteModal">  
-    <div id="deleteModal-content">  
-      <h3 style="color:red; text-align:center;">Confirmar exclusão</h3>  
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal-overlay">  
+    <div class="modal-content">  
+      <h3 style="color:red; text-align:center; margin-top:0;">Confirmar exclusão</h3>  
       <p style="text-align:center;">Digite a senha para apagar:</p>  
       <input type="password" id="deletePassword" placeholder="Senha">  
-      <div id="deleteModal-buttons">  
-        <button id="cancelDelete">Cancelar</button>  
+      <div class="modal-buttons">  
+        <button id="cancelDelete" class="btn-secondary">Cancelar</button>  
         <button id="confirmDelete">Apagar</button>  
       </div>  
     </div>  
@@ -140,256 +422,367 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Configuração do Supabase
+    // ========== CONFIGURAÇÃO ==========
     const supabaseUrl = 'https://zoztapepviyezjoagawe.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvenRhcGVwdml5ZXpqb2FnYXdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNDY1NzQsImV4cCI6MjA3NzkyMjU3NH0.2L0CN2WhXvH1K1y-xCi3y8prQOTkQP_suE4gFFKlzP0';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    const loginScreen = document.getElementById('loginScreen');  
-    const loginBtn = document.getElementById('loginBtn');  
-    const username = document.getElementById('username');  
-    const password = document.getElementById('password');  
-    const addBtn = document.getElementById('addBtn');  
-    const saveBtn = document.getElementById('saveBtn');  
-    const confirmDelete = document.getElementById('confirmDelete');  
+    // ========== CACHE SYSTEM ==========
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+    const cache = {
+      data: {},
+      timestamps: {},
+      
+      set(key, value) {
+        this.data[key] = value;
+        this.timestamps[key] = Date.now();
+      },
+      
+      get(key) {
+        if (!this.data[key]) return null;
+        
+        const age = Date.now() - this.timestamps[key];
+        if (age > CACHE_DURATION) {
+          delete this.data[key];
+          delete this.timestamps[key];
+          return null;
+        }
+        
+        return this.data[key];
+      },
+      
+      clear(key) {
+        if (key) {
+          delete this.data[key];
+          delete this.timestamps[key];
+        } else {
+          this.data = {};
+          this.timestamps = {};
+        }
+      }
+    };
 
-    let currentTab = 'ranking';
-    let deleteIndex = null;
-    let editIndex = null;
-    let currentRole = null; // "adm" ou "player"
-    let currentData = [];
+    // ========== ELEMENTOS DOM ==========
+    const elements = {
+      loginScreen: document.getElementById('loginScreen'),
+      loginBtn: document.getElementById('loginBtn'),
+      username: document.getElementById('username'),
+      password: document.getElementById('password'),
+      menu: document.getElementById('menu'),
+      menuToggle: document.getElementById('menuToggle'),
+      content: document.getElementById('content'),
+      detailView: document.getElementById('detailView'),
+      detailContent: document.getElementById('detailContent'),
+      backBtn: document.getElementById('backBtn'),
+      addBtn: document.getElementById('addBtn'),
+      modal: document.getElementById('modal'),
+      deleteModal: document.getElementById('deleteModal'),
+      imageInput: document.getElementById('imageInput'),
+      titleInput: document.getElementById('titleInput'),
+      textInput: document.getElementById('textInput'),
+      saveBtn: document.getElementById('saveBtn'),
+      cancelEdit: document.getElementById('cancelEdit'),
+      deletePassword: document.getElementById('deletePassword'),
+      confirmDelete: document.getElementById('confirmDelete'),
+      cancelDelete: document.getElementById('cancelDelete')
+    };
 
-    // LOGIN
-    loginScreen.style.display = 'flex';
-    loginBtn.addEventListener('click', () => {
-      const user = username.value.trim();
-      const pass = password.value.trim();
-      if ((user.toLowerCase() === 'adm' && pass === 'P3drov3g3ta') || (user.toLowerCase() === 'player' && pass === '123')) {
-        currentRole = user.toLowerCase();
-        loginScreen.style.display = 'none';
+    // ========== ESTADO DA APLICAÇÃO ==========
+    let state = {
+      currentTab: 'ranking',
+      currentRole: null,
+      currentData: [],
+      editIndex: null,
+      deleteIndex: null,
+      isLoading: false
+    };
+
+    // ========== FUNÇÕES DE UTILIDADE ==========
+    function showLoading() {
+      elements.content.innerHTML = '<div class="loading">Carregando</div>';
+      state.isLoading = true;
+    }
+
+    function showError(message) {
+      elements.content.innerHTML = `<div class="error-message">${message}</div>`;
+      state.isLoading = false;
+    }
+
+    function showEmpty() {
+      elements.content.innerHTML = '<div class="empty-message">Nenhum item encontrado.</div>';
+      state.isLoading = false;
+    }
+
+    function closeAllModals() {
+      elements.modal.classList.remove('show');
+      elements.deleteModal.classList.remove('show');
+    }
+
+    function updateActiveTab() {
+      elements.menu.querySelectorAll('a').forEach(link => {
+        link.classList.toggle('active', link.dataset.tab === state.currentTab);
+      });
+    }
+
+    // ========== LOGIN ==========
+    function handleLogin() {
+      const user = elements.username.value.trim().toLowerCase();
+      const pass = elements.password.value.trim();
+      
+      if ((user === 'adm' && pass === 'P3drov3g3ta') || (user === 'player' && pass === '123')) {
+        state.currentRole = user;
+        elements.loginScreen.classList.remove('show');
+        
+        if (state.currentRole === 'adm') {
+          elements.addBtn.style.display = 'flex';
+        }
+        
         renderTab();
-        if (currentRole === 'player') addBtn.style.display = 'none';
       } else {
         alert('Usuário ou senha incorretos!');
       }
+    }
+
+    elements.loginBtn.addEventListener('click', handleLogin);
+    elements.password.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
     });
 
-    // RESTO DO SITE
-    const menu = document.getElementById('menu');
-    const menuToggle = document.getElementById('menuToggle');
-    const content = document.getElementById('content');
-    const modal = document.getElementById('modal');
-    const deleteModal = document.getElementById('deleteModal');
-    const detailView = document.getElementById('detailView');
-    const detailContent = document.getElementById('detailContent');
-    const backBtn = document.getElementById('backBtn');
-    const cancelDelete = document.getElementById('cancelDelete');
-    const deletePassword = document.getElementById('deletePassword');
-    const imageInput = document.getElementById('imageInput');
-    const titleInput = document.getElementById('titleInput');
-    const textInput = document.getElementById('textInput');
-
-    async function renderTab() {
-      content.innerHTML = '<p style="text-align:center;">Carregando...</p>';
-      detailView.style.display = 'none';
-      content.style.display = 'block';
+    // ========== CARREGAR DADOS ==========
+    async function loadData(forceRefresh = false) {
+      const cacheKey = state.currentTab;
+      
+      if (!forceRefresh) {
+        const cached = cache.get(cacheKey);
+        if (cached) {
+          state.currentData = cached;
+          return cached;
+        }
+      }
 
       try {
-        // Buscar dados do Supabase
         const { data: items, error } = await supabase
-          .from(currentTab)
+          .from(state.currentTab)
           .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        currentData = items || [];
-        content.innerHTML = '';
+        const result = items || [];
+        cache.set(cacheKey, result);
+        state.currentData = result;
+        return result;
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        throw error;
+      }
+    }
 
-        if (currentData.length === 0) {
-          content.innerHTML = '<p style="text-align:center;">Nenhum item encontrado.</p>';
+    // ========== RENDERIZAR TAB ==========
+    async function renderTab() {
+      showLoading();
+      elements.detailView.style.display = 'none';
+      elements.content.style.display = 'block';
+      updateActiveTab();
+
+      try {
+        const items = await loadData();
+
+        if (items.length === 0) {
+          showEmpty();
           return;
         }
 
-        currentData.forEach((item, index) => {
+        const grid = document.createElement('div');
+        grid.className = 'topics-grid';
+
+        items.forEach((item, index) => {
           const div = document.createElement('div');
           div.className = 'topic';
-          div.innerHTML = `  
-            ${item.image ? <img src="${item.image}"> : ''}  
-            <div class="topic-title">${item.title}</div>  
-          `;
+          
+          const imageHtml = item.image 
+            ? `<img src="${item.image}" alt="${item.title}" loading="lazy">`
+            : '';
+          
+          div.innerHTML = `${imageHtml}<div class="topic-title">${item.title}</div>`;
           div.addEventListener('click', () => openDetail(item, index));
-          content.appendChild(div);
+          grid.appendChild(div);
         });
+
+        elements.content.innerHTML = '';
+        elements.content.appendChild(grid);
+        state.isLoading = false;
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-        content.innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar dados.</p>';
+        showError('Erro ao carregar dados. Tente novamente.');
       }
     }
 
+    // ========== ABRIR DETALHE ==========
     function openDetail(item, index) {
-      content.style.display = 'none';
-      detailView.style.display = 'block';
-      detailContent.innerHTML = `  
-        ${item.image ? <img src="${item.image}" style="width:100%;border-radius:10px;"> : ''}  
-        <h2 style="color:red;">${item.title}</h2>  
-        <p class="detail-text">${item.text}</p>  
-        ${currentRole === 'adm' ? `
-          <button class="btn" id="editBtn">Editar</button>
-          <button class="btn" id="deleteBtn">Apagar</button>
-        ` : ''}  
+      elements.content.style.display = 'none';
+      elements.detailView.style.display = 'block';
+      
+      const imageHtml = item.image 
+        ? `<img src="${item.image}" alt="${item.title}" class="detail-image">`
+        : '';
+      
+      const actionsHtml = state.currentRole === 'adm' 
+        ? `<div class="detail-actions">
+            <button class="btn" id="editBtn">Editar</button>
+            <button class="btn" id="deleteBtn">Apagar</button>
+          </div>`
+        : '';
+      
+      elements.detailContent.innerHTML = `
+        ${imageHtml}
+        <h2 style="color:red;">${item.title}</h2>
+        <p class="detail-text">${item.text}</p>
+        ${actionsHtml}
       `;
 
-      if (currentRole === 'adm') {
+      if (state.currentRole === 'adm') {
         document.getElementById('deleteBtn').addEventListener('click', () => {
-          deleteIndex = index;
-          deletePassword.value = '';
-          deleteModal.style.display = 'flex';
+          state.deleteIndex = index;
+          elements.deletePassword.value = '';
+          elements.deleteModal.classList.add('show');
         });
 
         document.getElementById('editBtn').addEventListener('click', () => {
-          editIndex = index;
-          const itemToEdit = currentData[index];
-          titleInput.value = itemToEdit.title;
-          textInput.value = itemToEdit.text;
-          modal.style.display = 'flex';
+          state.editIndex = index;
+          elements.titleInput.value = item.title;
+          elements.textInput.value = item.text;
+          elements.imageInput.value = '';
+          elements.modal.classList.add('show');
         });
       }
+
+      window.scrollTo(0, 0);
     }
 
-    confirmDelete.addEventListener('click', async () => {
-      if (deletePassword.value === 'Galo') {
-        try {
-          const itemToDelete = currentData[deleteIndex];
-          
-          const { error } = await supabase
-            .from(currentTab)
-            .delete()
-            .eq('id', itemToDelete.id);
-
-          if (error) throw error;
-
-          deleteModal.style.display = 'none';
-          renderTab();
-          detailView.style.display = 'none';
-          content.style.display = 'block';
-        } catch (error) {
-          console.error('Erro ao deletar:', error);
-          alert('Erro ao deletar item.');
-        }
-      } else {
-        alert('Senha incorreta!');
-      }
-    });
-
-    cancelDelete.addEventListener('click', () => {
-      deleteModal.style.display = 'none';
-    });
-
-    backBtn.addEventListener('click', () => {
-      detailView.style.display = 'none';
-      content.style.display = 'block';
-    });
-
-    menuToggle.addEventListener('click', () => {
-      menu.classList.toggle('active');
-    });
-
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        currentTab = link.dataset.tab;
-        renderTab();
-        menu.classList.remove('active');
-      });
-    });
-
-    addBtn.addEventListener('click', () => {
-      editIndex = null;
-      modal.style.display = 'flex';
-      titleInput.value = '';
-      textInput.value = '';
-      imageInput.value = '';
-    });
-
-    saveBtn.addEventListener('click', async () => {
-      const text = textInput.value;
-      const title = titleInput.value;
+    // ========== SALVAR ITEM ==========
+    async function saveItem() {
+      const title = elements.titleInput.value.trim();
+      const text = elements.textInput.value.trim();
 
       if (!title || !text) {
         alert('Preencha título e texto!');
         return;
       }
 
-      try {
-        if (imageInput.files[0]) {
-          const reader = new FileReader();
-          reader.onload = async e => {
-            const newItem = { 
-              image: e.target.result, 
-              title, 
-              text 
-            };
-
-            if (editIndex !== null) {
-              // Atualizar item existente
-              const itemToUpdate = currentData[editIndex];
-              const { error } = await supabase
-                .from(currentTab)
-                .update(newItem)
-                .eq('id', itemToUpdate.id);
-
-              if (error) throw error;
-            } else {
-              // Criar novo item
-              const { error } = await supabase
-                .from(currentTab)
-                .insert([newItem]);
-
-              if (error) throw error;
-            }
-
-            modal.style.display = 'none';
-            renderTab();
-          };
-          reader.readAsDataURL(imageInput.files[0]);
-        } else {
-          const newItem = {
-            image: editIndex !== null ? currentData[editIndex].image : null,
-            title, 
-            text
-          };
-
-          if (editIndex !== null) {
-            // Atualizar item existente
-            const itemToUpdate = currentData[editIndex];
-            const { error } = await supabase
-              .from(currentTab)
-              .update(newItem)
-              .eq('id', itemToUpdate.id);
-
-            if (error) throw error;
+      const processImage = () => {
+        return new Promise((resolve) => {
+          if (elements.imageInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.readAsDataURL(elements.imageInput.files[0]);
           } else {
-            // Criar novo item
-            const { error } = await supabase
-              .from(currentTab)
-              .insert([newItem]);
-
-            if (error) throw error;
+            resolve(state.editIndex !== null ? state.currentData[state.editIndex].image : null);
           }
+        });
+      };
 
-          modal.style.display = 'none';
-          renderTab();
+      try {
+        const image = await processImage();
+        const itemData = { image, title, text };
+
+        if (state.editIndex !== null) {
+          const itemToUpdate = state.currentData[state.editIndex];
+          const { error } = await supabase
+            .from(state.currentTab)
+            .update(itemData)
+            .eq('id', itemToUpdate.id);
+
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from(state.currentTab)
+            .insert([itemData]);
+
+          if (error) throw error;
         }
+
+        cache.clear(state.currentTab);
+        closeAllModals();
+        await renderTab();
       } catch (error) {
         console.error('Erro ao salvar:', error);
-        alert('Erro ao salvar item.');
+        alert('Erro ao salvar item. Tente novamente.');
       }
+    }
+
+    // ========== DELETAR ITEM ==========
+    async function deleteItem() {
+      if (elements.deletePassword.value !== 'Galo') {
+        alert('Senha incorreta!');
+        return;
+      }
+
+      try {
+        const itemToDelete = state.currentData[state.deleteIndex];
+        
+        const { error } = await supabase
+          .from(state.currentTab)
+          .delete()
+          .eq('id', itemToDelete.id);
+
+        if (error) throw error;
+
+        cache.clear(state.currentTab);
+        closeAllModals();
+        elements.detailView.style.display = 'none';
+        elements.content.style.display = 'block';
+        await renderTab();
+      } catch (error) {
+        console.error('Erro ao deletar:', error);
+        alert('Erro ao deletar item. Tente novamente.');
+      }
+    }
+
+    // ========== EVENT LISTENERS ==========
+    elements.menuToggle.addEventListener('click', () => {
+      elements.menu.classList.toggle('active');
     });
 
-    window.onclick = e => {
-      if (e.target === modal) modal.style.display = 'none';
-      if (e.target === deleteModal) deleteModal.style.display = 'none';
-    };
+    elements.menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.currentTab = link.dataset.tab;
+        renderTab();
+        elements.menu.classList.remove('active');
+      });
+    });
+
+    elements.addBtn.addEventListener('click', () => {
+      state.editIndex = null;
+      elements.titleInput.value = '';
+      elements.textInput.value = '';
+      elements.imageInput.value = '';
+      elements.modal.classList.add('show');
+    });
+
+    elements.saveBtn.addEventListener('click', saveItem);
+    elements.cancelEdit.addEventListener('click', closeAllModals);
+    elements.confirmDelete.addEventListener('click', deleteItem);
+    elements.cancelDelete.addEventListener('click', closeAllModals);
+
+    elements.backBtn.addEventListener('click', () => {
+      elements.detailView.style.display = 'none';
+      elements.content.style.display = 'block';
+    });
+
+    // Fechar modais ao clicar fora
+    [elements.modal, elements.deleteModal].forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeAllModals();
+      });
+    });
+
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!elements.menu.contains(e.target) && !elements.menuToggle.contains(e.target)) {
+        elements.menu.classList.remove('active');
+      }
+    });
   </script>  
 </body>
 </html>
